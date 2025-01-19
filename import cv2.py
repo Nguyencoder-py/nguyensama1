@@ -90,7 +90,7 @@ def swipe_until_image_found(start_x, start_y, end_x, end_y, target_image, check_
 
 # Ví dụ sử dụng:
 start_x, start_y = 1100, 200  # Tọa độ bắt đầu vuốt
-end_x, end_y = 700, 200  # Tọa độ kết thúc vuốt
+end_x, end_y = 100, 200  # Tọa độ kết thúc vuốt
 target_image = "4_5.png"  # Hình ảnh mục tiêu cần click
 check_image = "check_image.png"  # Hình ảnh dùng để kiểm tra sau khi click
 
