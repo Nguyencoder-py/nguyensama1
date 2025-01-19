@@ -3,6 +3,7 @@ import pyautogui
 import time
 import os
 import numpy as np
+import subprocess
 
 # Hàm kiểm tra file tồn tại
 def check_file_exists(file_path):
@@ -39,7 +40,7 @@ def is_image_matched(image_path, threshold=0.9):
     return max_val >= threshold  # Trả về True nếu khớp
 
 # Hàm vuốt màn hình (swipe)
-def swipe_device(start_x, start_y, end_x, end_y, duration=2000):
+def swipe_device(start_x, start_y, end_x, end_y, duration=3000):
     os.system(f"adb shell input swipe {start_x} {start_y} {end_x} {end_y} {duration}")
 
 # Hàm nhấn nút "quay lại"
@@ -68,29 +69,32 @@ def swipe_until_image_found(start_x, start_y, end_x, end_y, target_image, check_
             loc = find_image(target_image)
 
             if len(loc[0]) > 0:  # Nếu tìm thấy hình ảnh
-                print("Tìm thấy hình ảnh mục tiêu!")
-                click_x = loc[1][0] + 10  # Offset
-                click_y = loc[0][0] + 10
-                os.system(f"adb shell input tap {click_x} {click_y}")
+                print(f"Tìm thấy hình ảnh mục tiêu tại vị trí: ({loc[1][0]}, {loc[0][0]})")
+                click_x = loc[1][0]  # Lấy tọa độ đầu tiên
+                click_y = loc[0][0]  # Lấy tọa độ đầu tiên
 
-                # Kiểm tra hình ảnh hiện tại với hình kiểm tra
-                time.sleep(2)  # Chờ màn hình cập nhật sau khi click
+                print(f"Nhấn vào tọa độ ({click_x}, {click_y})")
+                # Thực thi lệnh ADB để click vào tọa độ đã tìm
+                subprocess.run(["adb", "shell", "input", "tap", str(click_x), str(click_y)])
+                time.sleep(2)  # Đợi sau khi click
+
+                # Kiểm tra lại hình ảnh kiểm tra
                 if is_image_matched(check_image):
                     print("Hình ảnh kiểm tra trùng khớp. Kết thúc!")
-                    return  # Thoát chương trình khi hoàn tất
+                    return  # Kết thúc khi hoàn tất
                 else:
                     print("Hình ảnh kiểm tra không trùng khớp. Quay lại và tiếp tục vuốt...")
-                    press_back_button()  # Nhấn nút quay lại
+                    press_back_button()  # Nhấn quay lại
             else:
-                print("Hình ảnh mục tiêu không tìm thấy trong lần vuốt này.")
+                print("Không tìm thấy hình ảnh mục tiêu trong lần vuốt này.")
 
-        # Sau khi vuốt 5 lần không thấy, đổi hướng
+        # Sau khi vuốt 4 lần không thấy, đổi hướng
         print(f"Không tìm thấy hình ảnh sau {max_swipes} lần vuốt. Đổi hướng...")
         direction *= -1  # Đổi hướng vuốt
 
 # Ví dụ sử dụng:
 start_x, start_y = 1100, 200  # Tọa độ bắt đầu vuốt
-end_x, end_y = 100, 200  # Tọa độ kết thúc vuốt
+end_x, end_y = 200, 200  # Tọa độ kết thúc vuốt
 target_image = "4_5.png"  # Hình ảnh mục tiêu cần click
 check_image = "check_image.png"  # Hình ảnh dùng để kiểm tra sau khi click
 
