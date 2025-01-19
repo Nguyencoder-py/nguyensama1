@@ -39,7 +39,7 @@ def is_image_matched(image_path, threshold=0.9):
     return max_val >= threshold  # Trả về True nếu khớp
 
 # Hàm vuốt màn hình (swipe)
-def swipe_device(start_x, start_y, end_x, end_y, duration=500):
+def swipe_device(start_x, start_y, end_x, end_y, duration=2000):
     os.system(f"adb shell input swipe {start_x} {start_y} {end_x} {end_y} {duration}")
 
 # Hàm nhấn nút "quay lại"
@@ -90,7 +90,7 @@ def swipe_until_image_found(start_x, start_y, end_x, end_y, target_image, check_
 
 # Ví dụ sử dụng:
 start_x, start_y = 1100, 200  # Tọa độ bắt đầu vuốt
-end_x, end_y = 400, 200  # Tọa độ kết thúc vuốt
+end_x, end_y = 700, 200  # Tọa độ kết thúc vuốt
 target_image = "4_5.png"  # Hình ảnh mục tiêu cần click
 check_image = "check_image.png"  # Hình ảnh dùng để kiểm tra sau khi click
 
