@@ -63,7 +63,7 @@ def swipe_until_image_found(start_x, start_y, end_x, end_y, target_image, check_
                 end_y,
                 swipe_duration,
             )
-            time.sleep(1)  # Đợi một chút để ảnh chụp được cập nhật
+            time.sleep(2)  # Đợi một chút để ảnh chụp được cập nhật
 
             # Tìm kiếm hình ảnh mục tiêu
             loc = find_image(target_image)
