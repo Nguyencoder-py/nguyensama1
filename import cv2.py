@@ -1,5 +1,4 @@
 import cv2
-import pyautogui
 import time
 import os
 import numpy as np
@@ -10,11 +9,24 @@ def check_file_exists(file_path):
     if not os.path.exists(file_path):
         raise FileNotFoundError(f"File {file_path} không tồn tại.")
 
+# Hàm lấy ảnh chụp màn hình từ thiết bị qua ADB
+def get_device_screenshot():
+    # Chụp ảnh màn hình từ thiết bị Android qua ADB
+    result = subprocess.run(["adb", "shell", "screencap", "-p", "/sdcard/screen.png"], capture_output=True, text=True)
+    if result.returncode != 0:
+        raise Exception("Không thể chụp màn hình từ thiết bị qua ADB.")
+
+    # Sao chép ảnh vào máy tính
+    subprocess.run(["adb", "pull", "/sdcard/screen.png", "screen.png"])
+    time.sleep(1)  # Đảm bảo ảnh đã được sao chép hoàn toàn
+
+    # Đọc ảnh từ file
+    return cv2.imread("screen.png")
+
 # Hàm tìm kiếm và nhận diện hình ảnh trên màn hình
 def find_image(image_path, threshold=0.8):
     check_file_exists(image_path)  # Kiểm tra file tồn tại
-    screenshot = pyautogui.screenshot()  # Chụp màn hình
-    screenshot = cv2.cvtColor(np.array(screenshot), cv2.COLOR_RGB2BGR)  # Chuyển sang BGR
+    screenshot = get_device_screenshot()  # Lấy ảnh từ thiết bị
     template = cv2.imread(image_path)  # Đọc hình ảnh cần tìm
 
     if template is None:
@@ -28,8 +40,7 @@ def find_image(image_path, threshold=0.8):
 # Hàm kiểm tra hình ảnh hiện tại có giống với hình mẫu không
 def is_image_matched(image_path, threshold=0.9):
     check_file_exists(image_path)  # Kiểm tra file tồn tại
-    screenshot = pyautogui.screenshot()  # Chụp màn hình
-    screenshot = cv2.cvtColor(np.array(screenshot), cv2.COLOR_RGB2BGR)  # Chuyển sang BGR
+    screenshot = get_device_screenshot()  # Lấy ảnh từ thiết bị
     template = cv2.imread(image_path)  # Đọc hình ảnh mẫu
 
     if template is None:
