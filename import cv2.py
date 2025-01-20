@@ -70,9 +70,10 @@ def swipe_until_image_found(start_x, start_y, end_x, end_y, target_image, check_
 
             if len(loc[0]) > 0:  # Nếu tìm thấy hình ảnh
                 print(f"Tìm thấy hình ảnh mục tiêu tại vị trí: ({loc[1][0]}, {loc[0][0]})")
+                time.sleep(1)
                 click_x = loc[1][0]  # Lấy tọa độ đầu tiên
                 click_y = loc[0][0]  # Lấy tọa độ đầu tiên
-
+                
                 print(f"Nhấn vào tọa độ ({click_x}, {click_y})")
                 # Thực thi lệnh ADB để click vào tọa độ đã tìm
                 subprocess.run(["adb", "shell", "input", "tap", str(click_x), str(click_y)])
